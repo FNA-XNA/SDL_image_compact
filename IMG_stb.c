@@ -45,7 +45,7 @@
 
 static int IMG_LoadSTB_RW_read(void *user, char *data, int size)
 {
-    return SDL_RWread((SDL_RWops*) user, data, size, 1);
+    return SDL_RWread((SDL_RWops*) user, data, 1, size);
 }
 
 static void IMG_LoadSTB_RW_skip(void *user, int n)
