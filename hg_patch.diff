@@ -1,14 +1,14 @@
 # HG changeset patch
 # User Ethan Lee <flibitijibibo@flibitijibibo.com>
-# Date 1533761013 14400
-#      Wed Aug 08 16:43:33 2018 -0400
-# Node ID 881a5fa696582bda0cd4528da066980dfaabb2c0
+# Date 1533762596 14400
+#      Wed Aug 08 17:09:56 2018 -0400
+# Node ID 87ba2c65e030b8acb9cdf030280029ec6b8b8c46
 # Parent  8fee51506499cda165146573c0e79c2b7930d1d3
 Add USE_STBIMAGE for LoadPNG/LoadJPG, USE_TINYJPEG for SaveJPG
 
-diff -r 8fee51506499 -r 881a5fa69658 IMG_jpg.c
+diff -r 8fee51506499 -r 87ba2c65e030 IMG_jpg.c
 --- a/IMG_jpg.c	Sun Jun 17 09:04:01 2018 +0300
-+++ b/IMG_jpg.c	Wed Aug 08 16:43:33 2018 -0400
++++ b/IMG_jpg.c	Wed Aug 08 17:09:56 2018 -0400
 @@ -534,6 +534,95 @@
      return result;
  }
@@ -201,9 +201,9 @@ diff -r 8fee51506499 -r 881a5fa69658 IMG_jpg.c
  #endif
  }
  
-diff -r 8fee51506499 -r 881a5fa69658 IMG_png.c
+diff -r 8fee51506499 -r 87ba2c65e030 IMG_png.c
 --- a/IMG_png.c	Sun Jun 17 09:04:01 2018 +0300
-+++ b/IMG_png.c	Wed Aug 08 16:43:33 2018 -0400
++++ b/IMG_png.c	Wed Aug 08 17:09:56 2018 -0400
 @@ -443,6 +443,53 @@
      return(surface);
  }
@@ -266,9 +266,9 @@ diff -r 8fee51506499 -r 881a5fa69658 IMG_png.c
  #define strlen  SDL_strlen
  
  #include "miniz.h"
-diff -r 8fee51506499 -r 881a5fa69658 IMG_stb.c
+diff -r 8fee51506499 -r 87ba2c65e030 IMG_stb.c
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/IMG_stb.c	Wed Aug 08 16:43:33 2018 -0400
++++ b/IMG_stb.c	Wed Aug 08 17:09:56 2018 -0400
 @@ -0,0 +1,140 @@
 +/*
 +  SDL_image:  An example image loading library for use with SDL
@@ -317,7 +317,7 @@ diff -r 8fee51506499 -r 881a5fa69658 IMG_stb.c
 +
 +static int IMG_LoadSTB_RW_read(void *user, char *data, int size)
 +{
-+    return SDL_RWread((SDL_RWops*) user, data, size, 1);
++    return SDL_RWread((SDL_RWops*) user, data, 1, size);
 +}
 +
 +static void IMG_LoadSTB_RW_skip(void *user, int n)
@@ -410,9 +410,9 @@ diff -r 8fee51506499 -r 881a5fa69658 IMG_stb.c
 +}
 +
 +#endif /* USE_STBIMAGE */
-diff -r 8fee51506499 -r 881a5fa69658 stb_image.h
+diff -r 8fee51506499 -r 87ba2c65e030 stb_image.h
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/stb_image.h	Wed Aug 08 16:43:33 2018 -0400
++++ b/stb_image.h	Wed Aug 08 17:09:56 2018 -0400
 @@ -0,0 +1,7471 @@
 +/* stb_image - v2.19 - public domain image loader - http://nothings.org/stb
 +                                  no warranty implied; use at your own risk
@@ -7885,9 +7885,9 @@ diff -r 8fee51506499 -r 881a5fa69658 stb_image.h
 +WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 +------------------------------------------------------------------------------
 +*/
-diff -r 8fee51506499 -r 881a5fa69658 tiny_jpeg.h
+diff -r 8fee51506499 -r 87ba2c65e030 tiny_jpeg.h
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/tiny_jpeg.h	Wed Aug 08 16:43:33 2018 -0400
++++ b/tiny_jpeg.h	Wed Aug 08 17:09:56 2018 -0400
 @@ -0,0 +1,1285 @@
 +/**
 + * tiny_jpeg.h
