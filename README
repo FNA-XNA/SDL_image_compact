@@ -1,0 +1,38 @@
+This is SDL_image_compact, an ABI-compatible SDL_image branch that adds support
+for loading PNG/JPG images with stb_image and writing JPG images with tinyjpeg.
+
+License
+-------
+SDL_image_compact is released under the zlib license. See LICENSE for details.
+
+About SDL_image_compact
+-----------------------
+SDL_image_compact is simply a branch of SDL_image with a single commit to add
+stb_image/tinyjpeg support. This is NOT intended to be a fork and will remain
+compatible with SDL_image for as long as it exists. The intention is to have
+these changes merged into mainline SDL_image, at which point this project will
+be deleted.
+
+The Mercurial patch can be found at 'hg_patch.diff'.
+
+This change makes building and shipping for mobile/console targets MUCH easier!
+
+Dependencies
+------------
+While we are adding stb_image and tinyjpeg to this project, SDL_image_compact
+still only depends solely on SDL2. SDL_image_compact never explicitly uses the C
+runtime.
+
+Building SDL_image_compact
+--------------------------
+For *nix platforms, just type `make` in the root directory!
+
+For Windows, see the 'visualc/' directory. /* TODO: Not done yet! */
+
+For Xbox One, see the 'visualc-winrt' directory. /* TODO: Not done yet! */
+
+Found an issue?
+---------------
+Issues and patches can be reported via GitHub:
+
+https://github.com/FNA-XNA/SDL_image_compact/issues
