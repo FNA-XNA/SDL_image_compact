@@ -1,14 +1,14 @@
 # HG changeset patch
 # User Ethan Lee <flibitijibibo@flibitijibibo.com>
-# Date 1533762596 14400
-#      Wed Aug 08 17:09:56 2018 -0400
-# Node ID 87ba2c65e030b8acb9cdf030280029ec6b8b8c46
+# Date 1533763317 14400
+#      Wed Aug 08 17:21:57 2018 -0400
+# Node ID 1ef582d76e3aa405688a465fb2dc8960f9f0aa2b
 # Parent  8fee51506499cda165146573c0e79c2b7930d1d3
 Add USE_STBIMAGE for LoadPNG/LoadJPG, USE_TINYJPEG for SaveJPG
 
-diff -r 8fee51506499 -r 87ba2c65e030 IMG_jpg.c
+diff -r 8fee51506499 -r 1ef582d76e3a IMG_jpg.c
 --- a/IMG_jpg.c	Sun Jun 17 09:04:01 2018 +0300
-+++ b/IMG_jpg.c	Wed Aug 08 17:09:56 2018 -0400
++++ b/IMG_jpg.c	Wed Aug 08 17:21:57 2018 -0400
 @@ -534,6 +534,95 @@
      return result;
  }
@@ -105,7 +105,7 @@ diff -r 8fee51506499 -r 87ba2c65e030 IMG_jpg.c
  #else
  
  int IMG_InitJPG()
-@@ -567,6 +656,83 @@
+@@ -567,6 +656,81 @@
  
  #ifdef SAVE_JPG
  
@@ -140,10 +140,6 @@ diff -r 8fee51506499 -r 87ba2c65e030 IMG_jpg.c
 +        goto done;
 +    }
 +
-+    if (!IMG_Init(IMG_INIT_JPG)) {
-+        goto done;
-+    }
-+
 +    /* Convert surface to format we can save */
 +    if (surface->format->format != jpg_format) {
 +        jpeg_surface = SDL_ConvertSurfaceFormat(surface, jpg_format, 0);
@@ -169,13 +165,15 @@ diff -r 8fee51506499 -r 87ba2c65e030 IMG_jpg.c
 +        jpeg_surface->h,
 +        3,
 +        jpeg_surface->pixels
-+    );
++    ) - 1; /* tinyjpeg returns 0 on error, 1 on success */
 +
 +    if (jpeg_surface != surface) {
 +        SDL_FreeSurface(jpeg_surface);
 +    }
 +
-+    result = 0;
++    if (result < 0) {
++        SDL_SetError("tinyjpeg error");
++    }
 +
 +done:
 +    if (freedst) {
@@ -189,7 +187,7 @@ diff -r 8fee51506499 -r 87ba2c65e030 IMG_jpg.c
  int IMG_SaveJPG(SDL_Surface *surface, const char *file, int quality)
  {
      SDL_RWops *dst = SDL_RWFromFile(file, "wb");
-@@ -581,8 +747,10 @@
+@@ -581,8 +745,10 @@
  {
  #ifdef USE_JPEGLIB
      return IMG_SaveJPG_RW_jpeglib(surface, dst, freedst, quality);
@@ -201,9 +199,9 @@ diff -r 8fee51506499 -r 87ba2c65e030 IMG_jpg.c
  #endif
  }
  
-diff -r 8fee51506499 -r 87ba2c65e030 IMG_png.c
+diff -r 8fee51506499 -r 1ef582d76e3a IMG_png.c
 --- a/IMG_png.c	Sun Jun 17 09:04:01 2018 +0300
-+++ b/IMG_png.c	Wed Aug 08 17:09:56 2018 -0400
++++ b/IMG_png.c	Wed Aug 08 17:21:57 2018 -0400
 @@ -443,6 +443,53 @@
      return(surface);
  }
@@ -266,9 +264,9 @@ diff -r 8fee51506499 -r 87ba2c65e030 IMG_png.c
  #define strlen  SDL_strlen
  
  #include "miniz.h"
-diff -r 8fee51506499 -r 87ba2c65e030 IMG_stb.c
+diff -r 8fee51506499 -r 1ef582d76e3a IMG_stb.c
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/IMG_stb.c	Wed Aug 08 17:09:56 2018 -0400
++++ b/IMG_stb.c	Wed Aug 08 17:21:57 2018 -0400
 @@ -0,0 +1,140 @@
 +/*
 +  SDL_image:  An example image loading library for use with SDL
@@ -410,9 +408,9 @@ diff -r 8fee51506499 -r 87ba2c65e030 IMG_stb.c
 +}
 +
 +#endif /* USE_STBIMAGE */
-diff -r 8fee51506499 -r 87ba2c65e030 stb_image.h
+diff -r 8fee51506499 -r 1ef582d76e3a stb_image.h
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/stb_image.h	Wed Aug 08 17:09:56 2018 -0400
++++ b/stb_image.h	Wed Aug 08 17:21:57 2018 -0400
 @@ -0,0 +1,7471 @@
 +/* stb_image - v2.19 - public domain image loader - http://nothings.org/stb
 +                                  no warranty implied; use at your own risk
@@ -7885,9 +7883,9 @@ diff -r 8fee51506499 -r 87ba2c65e030 stb_image.h
 +WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 +------------------------------------------------------------------------------
 +*/
-diff -r 8fee51506499 -r 87ba2c65e030 tiny_jpeg.h
+diff -r 8fee51506499 -r 1ef582d76e3a tiny_jpeg.h
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/tiny_jpeg.h	Wed Aug 08 17:09:56 2018 -0400
++++ b/tiny_jpeg.h	Wed Aug 08 17:21:57 2018 -0400
 @@ -0,0 +1,1285 @@
 +/**
 + * tiny_jpeg.h

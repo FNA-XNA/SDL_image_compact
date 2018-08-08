@@ -687,10 +687,6 @@ static int IMG_SaveJPG_RW_tinyjpeg(SDL_Surface *surface, SDL_RWops *dst, int fre
         goto done;
     }
 
-    if (!IMG_Init(IMG_INIT_JPG)) {
-        goto done;
-    }
-
     /* Convert surface to format we can save */
     if (surface->format->format != jpg_format) {
         jpeg_surface = SDL_ConvertSurfaceFormat(surface, jpg_format, 0);
@@ -716,13 +712,15 @@ static int IMG_SaveJPG_RW_tinyjpeg(SDL_Surface *surface, SDL_RWops *dst, int fre
         jpeg_surface->h,
         3,
         jpeg_surface->pixels
-    );
+    ) - 1; /* tinyjpeg returns 0 on error, 1 on success */
 
     if (jpeg_surface != surface) {
         SDL_FreeSurface(jpeg_surface);
     }
 
-    result = 0;
+    if (result < 0) {
+        SDL_SetError("tinyjpeg error");
+    }
 
 done:
     if (freedst) {
