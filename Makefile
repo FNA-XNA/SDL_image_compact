@@ -20,34 +20,24 @@ endif
 ifeq ($(WINDOWS_TARGET),1)
 	TARGET_PREFIX = 
 	TARGET_SUFFIX = .dll
-	UTIL_SUFFIX = .exe
 	LDFLAGS += -static-libgcc
 else ifeq ($(UNAME), Darwin)
 	CC = cc -arch i386 -arch x86_64 -mmacosx-version-min=10.6
 	CFLAGS += -fpic -fPIC
 	TARGET_PREFIX = lib
 	TARGET_SUFFIX = -2.0.0.dylib
-	UTIL_SUFFIX = 
 else
 	CFLAGS += -fpic -fPIC
 	TARGET_PREFIX = lib
 	TARGET_SUFFIX = -2.0.so.0
-	UTIL_SUFFIX = 
 endif
 
 CFLAGS += -g -Wall -pedantic \
 	-DLOAD_BMP \
 	-DLOAD_GIF \
-	-DLOAD_LBM \
-	-DLOAD_PCX \
-	-DLOAD_PNM \
-	-DLOAD_SVG \
-	-DLOAD_TGA \
-	-DLOAD_XCF \
-	-DLOAD_XPM \
-	-DLOAD_XV \
 	-DUSE_STBIMAGE \
-	-DUSE_TINYJPEG
+	-DUSE_TINYJPEG \
+	-DSDL_IMAGE_USE_COMMON_BACKEND
 
 # Source lists
 IMGSRC = \
