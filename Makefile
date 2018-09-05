@@ -22,8 +22,7 @@ ifeq ($(WINDOWS_TARGET),1)
 	TARGET_SUFFIX = .dll
 	LDFLAGS += -static-libgcc
 else ifeq ($(UNAME), Darwin)
-	CC = cc -arch i386 -arch x86_64 -mmacosx-version-min=10.6
-	CFLAGS += -fpic -fPIC
+	CFLAGS += -mmacosx-version-min=10.6 -fpic -fPIC
 	TARGET_PREFIX = lib
 	TARGET_SUFFIX = -2.0.0.dylib
 else
@@ -32,7 +31,7 @@ else
 	TARGET_SUFFIX = -2.0.so.0
 endif
 
-CFLAGS += -g -Wall -pedantic \
+CFLAGS += -O3 -Wall -pedantic \
 	-DLOAD_BMP \
 	-DLOAD_GIF \
 	-DUSE_STBIMAGE \
