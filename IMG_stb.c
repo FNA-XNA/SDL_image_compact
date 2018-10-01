@@ -23,7 +23,9 @@
 
 #ifdef USE_STBIMAGE
 
+#ifndef INT_MAX
 #define INT_MAX 0x7FFFFFFF
+#endif
 
 #define malloc SDL_malloc
 #define realloc SDL_realloc
@@ -45,7 +47,7 @@
 
 static int IMG_LoadSTB_RW_read(void *user, char *data, int size)
 {
-    return SDL_RWread((SDL_RWops*) user, data, 1, size);
+    return (int) SDL_RWread((SDL_RWops*) user, data, 1, size);
 }
 
 static void IMG_LoadSTB_RW_skip(void *user, int n)
@@ -56,7 +58,7 @@ static void IMG_LoadSTB_RW_skip(void *user, int n)
 static int IMG_LoadSTB_RW_eof(void *user)
 {
     /* FIXME: Do we not have a way to detect EOF? -flibit */
-    int bytes, filler;
+    size_t bytes, filler;
     SDL_RWops *src = (SDL_RWops*) user;
     bytes = SDL_RWread(src, &filler, 1, 1);
     if (bytes != 1) /* FIXME: Could also be an error... */
@@ -69,7 +71,8 @@ static int IMG_LoadSTB_RW_eof(void *user)
 
 SDL_Surface *IMG_LoadSTB_RW(SDL_RWops *src)
 {
-    int start, w, h, format;
+    Sint64 start;
+    int w, h, format;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     int shift;
 #endif

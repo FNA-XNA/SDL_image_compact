@@ -1,14 +1,14 @@
 # HG changeset patch
 # User Ethan Lee <flibitijibibo@flibitijibibo.com>
-# Date 1533763317 14400
-#      Wed Aug 08 17:21:57 2018 -0400
-# Node ID 1ef582d76e3aa405688a465fb2dc8960f9f0aa2b
+# Date 1538403394 14400
+#      Mon Oct 01 10:16:34 2018 -0400
+# Node ID a495de7166b5c4bae435b8509b757bf19e90444a
 # Parent  8fee51506499cda165146573c0e79c2b7930d1d3
 Add USE_STBIMAGE for LoadPNG/LoadJPG, USE_TINYJPEG for SaveJPG
 
-diff -r 8fee51506499 -r 1ef582d76e3a IMG_jpg.c
+diff -r 8fee51506499 -r a495de7166b5 IMG_jpg.c
 --- a/IMG_jpg.c	Sun Jun 17 09:04:01 2018 +0300
-+++ b/IMG_jpg.c	Wed Aug 08 17:21:57 2018 -0400
++++ b/IMG_jpg.c	Mon Oct 01 10:16:34 2018 -0400
 @@ -534,6 +534,95 @@
      return result;
  }
@@ -199,9 +199,9 @@ diff -r 8fee51506499 -r 1ef582d76e3a IMG_jpg.c
  #endif
  }
  
-diff -r 8fee51506499 -r 1ef582d76e3a IMG_png.c
+diff -r 8fee51506499 -r a495de7166b5 IMG_png.c
 --- a/IMG_png.c	Sun Jun 17 09:04:01 2018 +0300
-+++ b/IMG_png.c	Wed Aug 08 17:21:57 2018 -0400
++++ b/IMG_png.c	Mon Oct 01 10:16:34 2018 -0400
 @@ -443,6 +443,53 @@
      return(surface);
  }
@@ -264,10 +264,10 @@ diff -r 8fee51506499 -r 1ef582d76e3a IMG_png.c
  #define strlen  SDL_strlen
  
  #include "miniz.h"
-diff -r 8fee51506499 -r 1ef582d76e3a IMG_stb.c
+diff -r 8fee51506499 -r a495de7166b5 IMG_stb.c
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/IMG_stb.c	Wed Aug 08 17:21:57 2018 -0400
-@@ -0,0 +1,140 @@
++++ b/IMG_stb.c	Mon Oct 01 10:16:34 2018 -0400
+@@ -0,0 +1,143 @@
 +/*
 +  SDL_image:  An example image loading library for use with SDL
 +  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
@@ -293,7 +293,9 @@ diff -r 8fee51506499 -r 1ef582d76e3a IMG_stb.c
 +
 +#ifdef USE_STBIMAGE
 +
++#ifndef INT_MAX
 +#define INT_MAX 0x7FFFFFFF
++#endif
 +
 +#define malloc SDL_malloc
 +#define realloc SDL_realloc
@@ -315,7 +317,7 @@ diff -r 8fee51506499 -r 1ef582d76e3a IMG_stb.c
 +
 +static int IMG_LoadSTB_RW_read(void *user, char *data, int size)
 +{
-+    return SDL_RWread((SDL_RWops*) user, data, 1, size);
++    return (int) SDL_RWread((SDL_RWops*) user, data, 1, size);
 +}
 +
 +static void IMG_LoadSTB_RW_skip(void *user, int n)
@@ -326,7 +328,7 @@ diff -r 8fee51506499 -r 1ef582d76e3a IMG_stb.c
 +static int IMG_LoadSTB_RW_eof(void *user)
 +{
 +    /* FIXME: Do we not have a way to detect EOF? -flibit */
-+    int bytes, filler;
++    size_t bytes, filler;
 +    SDL_RWops *src = (SDL_RWops*) user;
 +    bytes = SDL_RWread(src, &filler, 1, 1);
 +    if (bytes != 1) /* FIXME: Could also be an error... */
@@ -339,7 +341,8 @@ diff -r 8fee51506499 -r 1ef582d76e3a IMG_stb.c
 +
 +SDL_Surface *IMG_LoadSTB_RW(SDL_RWops *src)
 +{
-+    int start, w, h, format;
++    Sint64 start;
++    int w, h, format;
 +#if SDL_BYTEORDER == SDL_BIG_ENDIAN
 +    int shift;
 +#endif
@@ -408,9 +411,9 @@ diff -r 8fee51506499 -r 1ef582d76e3a IMG_stb.c
 +}
 +
 +#endif /* USE_STBIMAGE */
-diff -r 8fee51506499 -r 1ef582d76e3a stb_image.h
+diff -r 8fee51506499 -r a495de7166b5 stb_image.h
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/stb_image.h	Wed Aug 08 17:21:57 2018 -0400
++++ b/stb_image.h	Mon Oct 01 10:16:34 2018 -0400
 @@ -0,0 +1,7471 @@
 +/* stb_image - v2.19 - public domain image loader - http://nothings.org/stb
 +                                  no warranty implied; use at your own risk
@@ -7883,9 +7886,9 @@ diff -r 8fee51506499 -r 1ef582d76e3a stb_image.h
 +WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 +------------------------------------------------------------------------------
 +*/
-diff -r 8fee51506499 -r 1ef582d76e3a tiny_jpeg.h
+diff -r 8fee51506499 -r a495de7166b5 tiny_jpeg.h
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/tiny_jpeg.h	Wed Aug 08 17:21:57 2018 -0400
++++ b/tiny_jpeg.h	Mon Oct 01 10:16:34 2018 -0400
 @@ -0,0 +1,1285 @@
 +/**
 + * tiny_jpeg.h
