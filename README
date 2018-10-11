@@ -32,7 +32,7 @@ For *nix platforms, just type `make` in the root directory!
 
 For Windows, see the 'visualc/' directory. /* TODO: Not done yet! */
 
-For Xbox One, see the 'visualc-winrt' directory. /* TODO: Not done yet! */
+For Xbox One, see the 'visualc-winrt' directory.
 
 Found an issue?
 ---------------
