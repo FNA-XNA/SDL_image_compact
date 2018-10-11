@@ -13,7 +13,10 @@ compatible with SDL_image for as long as it exists. The intention is to have
 these changes merged into mainline SDL_image, at which point this project will
 be deleted.
 
-The Mercurial patch can be found at 'hg_patch.diff'.
+The Mercurial patch can be found at 'hg_patch.diff', and the Bugzilla report can
+be found here:
+
+https://bugzilla.libsdl.org/show_bug.cgi?id=4249
 
 This change makes building and shipping for mobile/console targets MUCH easier!
 
