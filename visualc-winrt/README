@@ -1,0 +1,17 @@
+Building SDL_image_compact for UWP
+----------------------------------
+SDL_image_compact uses Visual Studio 2017 to build on Xbox One.
+
+Dependencies
+------------
+Before building, download SDL2 via Hg:
+
+hg clone http://hg.libsdl.org/SDL SDL2
+
+Note that we're naming the SDL folder "SDL2" and not "SDL", "SDL-2.0.8", etc.
+
+Compiling
+---------
+1. Build SDL2/VisualC-WinRT/UWP_VS2015/SDL-UWP.sln
+2. Build SDL_image_compact/visualc-winrt/SDL_image.sln
+3. Grab the output DLLs, ship it!

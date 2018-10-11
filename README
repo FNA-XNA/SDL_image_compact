@@ -1,17 +1,38 @@
-Building SDL_image_compact for UWP
-----------------------------------
-SDL_image_compact uses Visual Studio 2017 to build on Xbox One.
+This is SDL_image_compact, an ABI-compatible SDL_image branch that adds support
+for loading PNG/JPG images with stb_image and writing JPG images with tinyjpeg.
+
+License
+-------
+SDL_image_compact is released under the zlib license. See LICENSE for details.
+
+About SDL_image_compact
+-----------------------
+SDL_image_compact is simply a branch of SDL_image with a single commit to add
+stb_image/tinyjpeg support. This is NOT intended to be a fork and will remain
+compatible with SDL_image for as long as it exists. The intention is to have
+these changes merged into mainline SDL_image, at which point this project will
+be deleted.
+
+The Mercurial patch can be found at 'hg_patch.diff'.
+
+This change makes building and shipping for mobile/console targets MUCH easier!
 
 Dependencies
 ------------
-Before building, download SDL2 via Hg:
+While we are adding stb_image and tinyjpeg to this project, SDL_image_compact
+still only depends solely on SDL2. SDL_image_compact never explicitly uses the C
+runtime.
 
-hg clone http://hg.libsdl.org/SDL SDL2
+Building SDL_image_compact
+--------------------------
+For *nix platforms, just type `make` in the root directory!
 
-Note that we're naming the SDL folder "SDL2" and not "SDL", "SDL-2.0.8", etc.
+For Windows, see the 'visualc/' directory. /* TODO: Not done yet! */
 
-Compiling
----------
-1. Build SDL2/VisualC-WinRT/UWP_VS2015/SDL-UWP.sln
-2. Build SDL_image_compact/visualc-winrt/SDL_image.sln
-3. Grab the output DLLs, ship it!
+For Xbox One, see the 'visualc-winrt' directory. /* TODO: Not done yet! */
+
+Found an issue?
+---------------
+Issues and patches can be reported via GitHub:
+
+https://github.com/FNA-XNA/SDL_image_compact/issues
