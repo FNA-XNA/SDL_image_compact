@@ -38,6 +38,10 @@ CFLAGS += -O3 -Wall -pedantic \
 	-DUSE_TINYJPEG \
 	-DSDL_IMAGE_USE_COMMON_BACKEND
 
+SRCDIR = $(dir $(MAKEFILE_LIST))
+
+vpath %.c $(SRCDIR)
+
 # Source lists
 IMGSRC = \
 	IMG_bmp.c \
