@@ -5,6 +5,7 @@
 UNAME = $(shell uname)
 ARCH = $(shell uname -m)
 
+SDL_CFLAGS = `sdl2-config --cflags`
 SDL_LDFLAGS = `sdl2-config --libs`
 LDFLAGS += $(SDL_LDFLAGS)
 
@@ -77,7 +78,7 @@ all: $(IMGOBJ)
 	$(CC) $(CFLAGS) -shared -o $(TARGET_PREFIX)SDL2_image$(TARGET_SUFFIX) $(IMGOBJ) $(LDFLAGS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $< `sdl2-config --cflags`
+	$(CC) $(CFLAGS) -c -o $@ $< $(SDL_CFLAGS)
 
 clean:
 	rm -f $(IMGOBJ) $(TARGET_PREFIX)SDL2_image$(TARGET_SUFFIX)
