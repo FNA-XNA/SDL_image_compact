@@ -5,7 +5,8 @@
 UNAME = $(shell uname)
 ARCH = $(shell uname -m)
 
-LDFLAGS += `sdl2-config --libs`
+SDL_LDFLAGS = `sdl2-config --libs`
+LDFLAGS += $(SDL_LDFLAGS)
 
 # Detect Windows target
 WINDOWS_TARGET=0
