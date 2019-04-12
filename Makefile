@@ -34,9 +34,14 @@ endif
 CFLAGS += -O3 -Wall -pedantic \
 	-DLOAD_BMP \
 	-DLOAD_GIF \
-	-DUSE_STBIMAGE \
 	-DUSE_TINYJPEG \
-	-DSDL_IMAGE_USE_COMMON_BACKEND
+
+ifeq ($(WICBUILD),1)
+	CFLAGS += -DSDL_IMAGE_USE_WIC_BACKEND
+	LDFLAGS += -lole32
+else
+	CFLAGS += -DUSE_STBIMAGE -DSDL_IMAGE_USE_COMMON_BACKEND
+endif
 
 SRCDIR = $(dir $(MAKEFILE_LIST))
 
@@ -57,6 +62,7 @@ IMGSRC = \
 	IMG_tga.c \
 	IMG_tif.c \
 	IMG_webp.c \
+	IMG_WIC.c \
 	IMG_xcf.c \
 	IMG_xpm.c \
 	IMG_xv.c
