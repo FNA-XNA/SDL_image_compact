@@ -214,7 +214,7 @@ static SDL_Surface* WIC_LoadImage(SDL_RWops *src)
     IWICFormatConverter* formatConverter = NULL;
     UINT width, height;
 
-    if (wicFactory == NULL && !WIC_Init()) {
+    if (wicFactory == NULL && (WIC_Init() < 0)) {
         IMG_SetError("WIC failed to initialize!");
         return NULL;
     }
