@@ -1,14 +1,14 @@
 # HG changeset patch
 # User Ethan Lee <flibitijibibo@flibitijibibo.com>
-# Date 1538403394 14400
-#      Mon Oct 01 10:16:34 2018 -0400
-# Node ID a495de7166b5c4bae435b8509b757bf19e90444a
-# Parent  8fee51506499cda165146573c0e79c2b7930d1d3
+# Date 1580420685 18000
+#      Thu Jan 30 16:44:45 2020 -0500
+# Node ID 665199055c9c237cd18fd00bdd49caca3df52f0a
+# Parent  ec1f8032810ed55ff45d1e92b0cb805d0647d95a
 Add USE_STBIMAGE for LoadPNG/LoadJPG, USE_TINYJPEG for SaveJPG
 
-diff -r 8fee51506499 -r a495de7166b5 IMG_jpg.c
---- a/IMG_jpg.c	Sun Jun 17 09:04:01 2018 +0300
-+++ b/IMG_jpg.c	Mon Oct 01 10:16:34 2018 -0400
+diff -r ec1f8032810e -r 665199055c9c IMG_jpg.c
+--- a/IMG_jpg.c	Thu Jan 16 20:51:54 2020 -0800
++++ b/IMG_jpg.c	Thu Jan 30 16:44:45 2020 -0500
 @@ -534,6 +534,95 @@
      return result;
  }
@@ -103,9 +103,9 @@ diff -r 8fee51506499 -r a495de7166b5 IMG_jpg.c
 +}
 +
  #else
- 
- int IMG_InitJPG()
-@@ -567,6 +656,81 @@
+ #if _MSC_VER >= 1300
+ #pragma warning(disable : 4100) /* warning C4100: 'op' : unreferenced formal parameter */
+@@ -570,6 +659,81 @@
  
  #ifdef SAVE_JPG
  
@@ -187,7 +187,7 @@ diff -r 8fee51506499 -r a495de7166b5 IMG_jpg.c
  int IMG_SaveJPG(SDL_Surface *surface, const char *file, int quality)
  {
      SDL_RWops *dst = SDL_RWFromFile(file, "wb");
-@@ -581,8 +745,10 @@
+@@ -584,8 +748,10 @@
  {
  #ifdef USE_JPEGLIB
      return IMG_SaveJPG_RW_jpeglib(surface, dst, freedst, quality);
@@ -199,10 +199,10 @@ diff -r 8fee51506499 -r a495de7166b5 IMG_jpg.c
  #endif
  }
  
-diff -r 8fee51506499 -r a495de7166b5 IMG_png.c
---- a/IMG_png.c	Sun Jun 17 09:04:01 2018 +0300
-+++ b/IMG_png.c	Mon Oct 01 10:16:34 2018 -0400
-@@ -443,6 +443,53 @@
+diff -r ec1f8032810e -r 665199055c9c IMG_png.c
+--- a/IMG_png.c	Thu Jan 16 20:51:54 2020 -0800
++++ b/IMG_png.c	Thu Jan 30 16:44:45 2020 -0500
+@@ -442,6 +442,53 @@
      return(surface);
  }
  
@@ -254,20 +254,12 @@ diff -r 8fee51506499 -r a495de7166b5 IMG_png.c
 +}
 +
  #else
- 
- int IMG_InitPNG()
-@@ -613,6 +660,7 @@
- #define MZ_ASSERT(x) SDL_assert(x)
- #undef memset
- #define memset  SDL_memset
-+#define memcpy  SDL_memcpy
- #define strlen  SDL_strlen
- 
- #include "miniz.h"
-diff -r 8fee51506499 -r a495de7166b5 IMG_stb.c
+ #if _MSC_VER >= 1300
+ #pragma warning(disable : 4100) /* warning C4100: 'op' : unreferenced formal parameter */
+diff -r ec1f8032810e -r 665199055c9c IMG_stb.c
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/IMG_stb.c	Mon Oct 01 10:16:34 2018 -0400
-@@ -0,0 +1,143 @@
++++ b/IMG_stb.c	Thu Jan 30 16:44:45 2020 -0500
+@@ -0,0 +1,150 @@
 +/*
 +  SDL_image:  An example image loading library for use with SDL
 +  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
@@ -406,14 +398,21 @@ diff -r 8fee51506499 -r a495de7166b5 IMG_stb.c
 +        /* The error message should already be set */
 +        SDL_free(pixels);
 +        SDL_RWseek(src, start, RW_SEEK_SET);
++    } else {
++        /* FIXME: This sucks. It'd be better to allocate the surface first, then
++         * write directly to the pixel buffer:
++         * https://github.com/nothings/stb/issues/58
++         * -flibit
++         */
++        surface->flags &= ~SDL_PREALLOC;
 +    }
 +    return surface;
 +}
 +
 +#endif /* USE_STBIMAGE */
-diff -r 8fee51506499 -r a495de7166b5 stb_image.h
+diff -r ec1f8032810e -r 665199055c9c stb_image.h
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/stb_image.h	Mon Oct 01 10:16:34 2018 -0400
++++ b/stb_image.h	Thu Jan 30 16:44:45 2020 -0500
 @@ -0,0 +1,7471 @@
 +/* stb_image - v2.19 - public domain image loader - http://nothings.org/stb
 +                                  no warranty implied; use at your own risk
@@ -7886,9 +7885,9 @@ diff -r 8fee51506499 -r a495de7166b5 stb_image.h
 +WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 +------------------------------------------------------------------------------
 +*/
-diff -r 8fee51506499 -r a495de7166b5 tiny_jpeg.h
+diff -r ec1f8032810e -r 665199055c9c tiny_jpeg.h
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/tiny_jpeg.h	Mon Oct 01 10:16:34 2018 -0400
++++ b/tiny_jpeg.h	Thu Jan 30 16:44:45 2020 -0500
 @@ -0,0 +1,1285 @@
 +/**
 + * tiny_jpeg.h

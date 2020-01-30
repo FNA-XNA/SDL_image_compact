@@ -136,6 +136,13 @@ SDL_Surface *IMG_LoadSTB_RW(SDL_RWops *src)
         /* The error message should already be set */
         SDL_free(pixels);
         SDL_RWseek(src, start, RW_SEEK_SET);
+    } else {
+        /* FIXME: This sucks. It'd be better to allocate the surface first, then
+         * write directly to the pixel buffer:
+         * https://github.com/nothings/stb/issues/58
+         * -flibit
+         */
+        surface->flags &= ~SDL_PREALLOC;
     }
     return surface;
 }
