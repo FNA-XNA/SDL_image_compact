@@ -1,6 +1,6 @@
 /*
   SDL_image:  An example image loading library for use with SDL
-  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2020 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -479,7 +479,7 @@ static int IMG_SaveJPG_RW_jpeglib(SDL_Surface *surface, SDL_RWops *dst, int free
     int result = -1;
 
     if (!dst) {
-        SDL_SetError("Passed NULL dst");
+        IMG_SetError("Passed NULL dst");
         goto done;
     }
 
@@ -624,6 +624,9 @@ SDL_Surface *IMG_LoadJPG_RW(SDL_RWops *src)
 }
 
 #else
+#if _MSC_VER >= 1300
+#pragma warning(disable : 4100) /* warning C4100: 'op' : unreferenced formal parameter */
+#endif
 
 int IMG_InitJPG()
 {
